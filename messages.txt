@@ -1,0 +1,99 @@
+BULLY BIRTHDAY WEBSITE - SAARE MESSAGES
+=======================================
+(Naam badalna ho toh script.js mein: const HER_NAME = "Bully";)
+
+
+PAGE 1
+------
+Hey Bully!
+Pata hai aaj kya special din hai?
+Socho socho... dimaag pe thoda zor daalo 🤔
+[Haan pata hai 😌]   [No]
+
+
+PAGE 2
+------
+Smart ho waise!
+Kya main tumhara favourite insaan hu?
+Jhooth bologi toh button pakdega nahi 😏
+[Haan obviously 🙈]   [No]
+
+
+PAGE 3 (EMOTIONAL - type hota hai)
+----------------------------------
+Ek sach bolu?
+
+Mujhe sach mein nahi pata ki hamara rishta kya hai... dost, best friend, ya kuch aur 🤷
+
+Aur shayad iska koi naam hona zaroori bhi nahi. Kuch rishte naam se nahi, ehsaas se chalte hai.
+
+Tum ladti ho, bully karti ho, pareshaan karti ho... par sach bolu? Tumhare bina sab kuch adhoora lagta hai 🥹
+
+Bas itna yaad rakhna, din ho ya raat, khushi ho ya aansu, main hamesha tumhare saath rahunga. Bina kuch puche, bina kuch maange 🤍
+
+Ye baat hamesha yaad rakhogi na?
+Promise wala yes chahiye 🤍
+[Haan, promise 🤍]   [No]
+
+
+PAGE 4
+------
+Ek surprise hai...
+Surprise dekhne ke liye ready ho?
+Aankhein band karo... nahi nahi, khuli rakho warna dikhega kaise 😂
+[Ready hu! 🎉]   [No]
+
+
+LAST PAGE
+---------
+Happy Birthday Bully 🎂
+Aankhein band karo, wish maango, aur candles pe tap karo ✨
+👆 cake pe tap karo
+(tap ke baad) Wish ho gayi! Ab ye poori bhi hogi 🌟
+
+LETTER:
+Happy Birthday Bully! 🥳
+
+Aaj ka din sirf tumhara hai. Bahut saari hasi, bahut saara cake, aur zero tension 🍰
+
+Pata nahi hum ek dusre ke liye kya hai, aur shayad naam dena zaroori bhi nahi. Bas itna jaanta hu ki tum mere liye bahut, bahut special ho ✨
+
+Tum jaisi ho na, waisi hi perfect ho. Tumhari bak-bak, tumhara gussa, tumhari bullying, sab kuch. Kabhi kisi ke liye mat badalna 🌸
+
+Kabhi life thodi mushkil lage, raat ko neend na aaye, ya lage ki koi samajh nahi raha, toh bas ek message kar dena. Main hamesha yahin hu. Aaj bhi, kal bhi, hamesha 🤍
+
+Bhagwan kare tumhari har wish poori ho, aur tumhari smile kabhi kam na ho. Kyunki wo smile kisi ka pura din bana deti hai 😊
+
+Aur haan Bully, ye No button wali harkat maine sab dekhi hai 😏
+
+- Hamesha tumhare saath 🤍
+
+
+NO BUTTON DABANE PE FUNNY MESSAGES (ek ek karke aate hai)
+--------------------------------------------------------
+1.  Kyu click kar rahi ho? Pagal ho kya? 😤
+2.  Aisa karogi? 🥺
+3.  Galat button hai madam 🙄
+4.  Aaj No allowed nahi hai, birthday rules 😌
+5.  Pakad ke dikhao 😜
+6.  Itni ziddi kyu ho yaar? 😂
+7.  Ye button sirf decoration ke liye hai 😏
+8.  Arey arey, phir se? 🤦‍♂️
+9.  No ka stock khatam ho gaya 📦
+10. Ye button aaj chhutti pe hai 🏖️
+11. Kitna bhaagogi iske peeche? 🏃‍♀️
+12. Birthday hai tumhara isliye maaf kiya Bully 😒
+13. Haar maan lo, Yes hi dabana padega 😎
+14. Ek kaam karo, Yes try karo 🙃
+
+
+NO BUTTON KA TEXT (har click pe badalta hai)
+-------------------------------------------
+No → Pakka? 🤨 → Soch lo 🥺 → Phir se socho 😢 → Nahi maanogi? 😭 → Please 🙏 → Bilkul nahi 😤
+
+
+KAHAN BADLE
+-----------
+- Page ke sawaal, letter      → index.html
+- Funny messages, emotional page ki lines, naam → script.js
+- Colours / design            → style.css

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Happy Birthday 🎂</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="floaters" id="floaters"></div>
+<canvas id="confetti"></canvas>
+<div class="toast" id="toast"></div>
+
+<!-- 1 -->
+<section class="page active" data-step>
+  <div class="dots"></div>
+  <div class="emoji">👀</div>
+  <h1>Hey <span class="her-name"></span>!</h1>
+  <h2>Pata hai aaj kya special din hai?</h2>
+  <p class="sub">Socho socho... dimaag pe thoda zor daalo 🤔</p>
+  <div class="btns"><button class="yes">Haan pata hai 😌</button><button class="no">No</button></div>
+</section>
+
+<!-- 2 -->
+<section class="page" data-step>
+  <div class="dots"></div>
+  <div class="emoji">😎</div>
+  <h1>Smart ho waise!</h1>
+  <h2>Kya main tumhara favourite insaan hu?</h2>
+  <p class="sub">Jhooth bologi toh button pakdega nahi 😏</p>
+  <div class="btns"><button class="yes">Haan obviously 🙈</button><button class="no">No</button></div>
+</section>
+
+<!-- 3: emotional -->
+<section class="page" data-step data-type>
+  <div class="dots"></div>
+  <div class="emoji">🫶</div>
+  <h1>Ek sach bolu?</h1>
+  <div class="soft-text" id="typeText"></div>
+  <div class="fade-in" id="typeAfter">
+    <h2>Ye baat hamesha yaad rakhogi na?</h2>
+    <p class="sub">Promise wala yes chahiye 🤍</p>
+    <div class="btns"><button class="yes">Haan, promise 🤍</button><button class="no">No</button></div>
+  </div>
+</section>
+
+<!-- 4 -->
+<section class="page" data-step>
+  <div class="dots"></div>
+  <div class="emoji">🎁</div>
+  <h1>Ek surprise hai...</h1>
+  <h2>Surprise dekhne ke liye ready ho?</h2>
+  <p class="sub">Aankhein band karo... nahi nahi, khuli rakho warna dikhega kaise 😂</p>
+  <div class="btns"><button class="yes">Ready hu! 🎉</button><button class="no">No</button></div>
+</section>
+
+<!-- Final -->
+<section class="page" id="final">
+  <h1>Happy Birthday<br><span class="her-name"></span> 🎂</h1>
+  <p class="sub" style="margin-bottom:6px">Aankhein band karo, wish maango, aur candles pe tap karo ✨</p>
+  <div class="cake" id="cake">
+    <div class="candles">
+      <div class="candle"><div class="flame"></div></div>
+      <div class="candle"><div class="flame"></div></div>
+      <div class="candle"><div class="flame"></div></div>
+    </div>
+    <div class="layer top"></div>
+    <div class="layer bottom"></div>
+    <div class="plate"></div>
+  </div>
+  <p class="hint" id="hint">👆 cake pe tap karo</p>
+
+  <div class="letter" id="letter">
+    <p>Happy Birthday <b class="her-name"></b>! 🥳</p>
+    <p>Aaj ka din sirf tumhara hai. Bahut saari hasi, bahut saara cake, aur zero tension 🍰</p>
+    <p>Pata nahi hum ek dusre ke liye kya hai, aur shayad naam dena zaroori bhi nahi. Bas itna jaanta hu ki tum mere liye bahut, bahut special ho ✨</p>
+    <p>Tum jaisi ho na, waisi hi perfect ho. Tumhari bak-bak, tumhara gussa, tumhari bullying, sab kuch. Kabhi kisi ke liye mat badalna 🌸</p>
+    <p>Kabhi life thodi mushkil lage, raat ko neend na aaye, ya lage ki koi samajh nahi raha, toh bas ek message kar dena. Main hamesha yahin hu. Aaj bhi, kal bhi, hamesha 🤍</p>
+    <p>Bhagwan kare tumhari har wish poori ho, aur tumhari smile kabhi kam na ho. Kyunki wo smile kisi ka pura din bana deti hai 😊</p>
+    <p>Aur haan Bully, ye No button wali harkat maine sab dekhi hai 😏</p>
+    <div class="sign">Hamesha tumhare saath 🤍</div>
+  </div>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>
