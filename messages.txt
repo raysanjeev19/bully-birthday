@@ -44,29 +44,50 @@ Aankhein band karo... nahi nahi, khuli rakho warna dikhega kaise 😂
 [Ready hu! 🎉]   [No]
 
 
-LAST PAGE
----------
-Happy Birthday Bully 🎂
-Aankhein band karo, wish maango, aur candles pe tap karo ✨
-👆 cake pe tap karo
-(tap ke baad) Wish ho gayi! Ab ye poori bhi hogi 🌟
+PARTY ROOM (Ready hu! dabane ke baad - andhera kamra, ek ek button)
+-------------------------------------------------------------------
+1. Arey, itna andhera kyu hai? 🙈          [Light jalao 💡]      → lights jalti hai, room roshan
+2. Wah! Ab thoda music ho jaaye? 🎶       [Music chalao 🎵]     → Happy Birthday gaana bajta hai
+3. Thodi decoration bhi banti hai 😌      [Decoration karo 🎊]  → HAPPY BIRTHDAY ke jhande
+4. Balloons ke bina kaisi party? 🎈       [Balloons udao 🎈]    → B U L L Y wale balloons udte hai
+5. Ab sabse important cheez... 🤤          [Cake lao 🎂]
+6. Candles ke bina cake adhoora hai 🥲    [Candles jalao 🕯️]
+7. Sab ready hai... ab bolo? 🥳           [Happy Birthday! 🎉]  → balloons line mein "BULLY", fireworks
+8. Aankhein band karo, wish maango, aur candles pe tap karke bujhao 🌬️
+9. Wish ho gayi! Ab ye poori bhi hogi 🌟  [Tumhare liye ek message 💌]
 
-LETTER:
-Happy Birthday Bully! 🥳
 
-Aaj ka din sirf tumhara hai. Bahut saari hasi, bahut saara cake, aur zero tension 🍰
+MESSAGE (ek ek line karke aata hai, tap karo toh aage)
+------------------------------------------------------
+Aaj ka din...
+baaki dino jaisa hi lagta hai
+par ek fark hai
+aaj ke din tum is duniya mein aayi thi ✨
+aur duniya thodi aur khoobsurat ho gayi 🌸
+ek saal aur nikal gaya
+palak jhapakte hi ⏳
+kitni baatein, kitne jhagde
+kitni hasi, kitni bak-bak 😂
+aur sach bolu?
+har ek pal yaad hai mujhe 🥹
+pata hai...
+aage ka raasta hamesha aasaan nahi hoga
+kabhi thakaan hogi, kabhi aansu
+par darna mat
+kyunki tum akeli nahi ho
+main hamesha yahin hu 🤍
+bina kuch puche, bina kuch maange
+tum jaisi ho na...
+waisi hi perfect ho 💫
+apni smile kabhi kam mat hone dena
+kyunki wo kisi ka pura din bana deti hai 😊
+aur haan Bully...
+No button wali harkat maine sab dekhi hai 😏
+last mein...
+ek baar phir se...
+Happy Birthday Bully 🎂💖
 
-Pata nahi hum ek dusre ke liye kya hai, aur shayad naam dena zaroori bhi nahi. Bas itna jaanta hu ki tum mere liye bahut, bahut special ho ✨
-
-Tum jaisi ho na, waisi hi perfect ho. Tumhari bak-bak, tumhara gussa, tumhari bullying, sab kuch. Kabhi kisi ke liye mat badalna 🌸
-
-Kabhi life thodi mushkil lage, raat ko neend na aaye, ya lage ki koi samajh nahi raha, toh bas ek message kar dena. Main hamesha yahin hu. Aaj bhi, kal bhi, hamesha 🤍
-
-Bhagwan kare tumhari har wish poori ho, aur tumhari smile kabhi kam na ho. Kyunki wo smile kisi ka pura din bana deti hai 😊
-
-Aur haan Bully, ye No button wali harkat maine sab dekhi hai 😏
-
-- Hamesha tumhare saath 🤍
+END: Happy Birthday Bully + cake + "Hamesha tumhare saath 🤍"   [Phir se dekho 🔁]
 
 
 NO BUTTON DABANE PE FUNNY MESSAGES (ek ek karke aate hai)
@@ -94,6 +115,6 @@ No → Pakka? 🤨 → Soch lo 🥺 → Phir se socho 😢 → Nahi maanogi? �
 
 KAHAN BADLE
 -----------
-- Page ke sawaal, letter      → index.html
-- Funny messages, emotional page ki lines, naam → script.js
+- Page ke sawaal              → index.html
+- Naam, funny messages, emotional lines, party ke buttons, last message → script.js
 - Colours / design            → style.css
