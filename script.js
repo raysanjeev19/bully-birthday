@@ -284,7 +284,10 @@ function alignBalloons() {
 
 // Background song: YouTube se "Zamaana Lage", 10 sec ke baad se. Na chale toh music-box wala Happy Birthday
 const YT_ID = 'm8kaNWu-BC4', YT_START = 10;
-let yt, ytReady = false, musicOn = false, muted = false;
+let yt, ytReady = false, musicOn = false, muted = false, song;
+// agar folder mein song.mp3 rakhi hai toh pehle wahi bajegi
+let hasMp3 = false;
+fetch('song.mp3', { method: 'HEAD' }).then(r => { hasMp3 = r.ok; }).catch(() => {});
 window.onYouTubeIframeAPIReady = () => {
   yt = new YT.Player('ytPlayer', {
     videoId: YT_ID, width: 200, height: 200,
@@ -348,6 +351,12 @@ function startMusic() {
   if (musicOn) return;
   musicOn = true;
   document.getElementById('musicToggle').classList.add('show');
+  if (hasMp3) {
+    song = new Audio('song.mp3');
+    song.loop = true;
+    song.currentTime = YT_START;
+    return song.play().catch(() => { song = null; startSynth(); });
+  }
   if (!ytReady) return startSynth();
   // must be called inside the tap, otherwise phones block it
   yt.setVolume(75);
@@ -360,7 +369,8 @@ function startMusic() {
 document.getElementById('musicToggle').addEventListener('click', e => {
   e.stopPropagation();
   muted = !muted;
-  if (actx) master.gain.setTargetAtTime(muted ? 0 : .55, actx.currentTime, .05);
+  if (song) song.muted = muted;
+  else if (actx) master.gain.setTargetAtTime(muted ? 0 : .55, actx.currentTime, .05);
   else if (yt) muted ? yt.mute() : yt.unMute();
   e.currentTarget.classList.toggle('muted', muted);
 });
