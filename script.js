@@ -282,96 +282,44 @@ function alignBalloons() {
   });
 }
 
-// Background song: YouTube se "Zamaana Lage", 10 sec ke baad se. Na chale toh music-box wala Happy Birthday
-const YT_ID = 'm8kaNWu-BC4', YT_START = 10;
-let yt, ytReady = false, musicOn = false, muted = false, song;
-// agar folder mein song.mp3 rakhi hai toh pehle wahi bajegi
-let hasMp3 = false;
-fetch('song.mp3', { method: 'HEAD' }).then(r => { hasMp3 = r.ok; }).catch(() => {});
-window.onYouTubeIframeAPIReady = () => {
-  yt = new YT.Player('ytPlayer', {
-    videoId: YT_ID, width: 200, height: 200,
-    playerVars: { start: YT_START, playsinline: 1, controls: 0, disablekb: 1, rel: 0 },
-    events: {
-      onReady: () => { ytReady = true; },
-      onStateChange: e => { if (e.data === YT.PlayerState.ENDED) { yt.seekTo(YT_START, true); yt.playVideo(); } },
-      onError: () => { ytReady = false; if (musicOn && !actx) startSynth(); },
-    },
-  });
-};
-const ytTag = document.createElement('script');
-ytTag.src = 'https://www.youtube.com/iframe_api';
-document.head.appendChild(ytTag);
-
-let actx, master, nextStart;
-const NOTE = { F2: 87.31, G2: 98, C3: 130.81, G4: 392, A4: 440, B4: 493.88, C5: 523.25, D5: 587.33, E5: 659.25, F5: 698.46, G5: 783.99 };
-// [melody note, beats, bass note]
-const TUNE = [
-  ['G4', .75], ['G4', .25], ['A4', 1, 'C3'], ['G4', 1], ['C5', 1], ['B4', 2, 'G2'],
-  ['G4', .75], ['G4', .25], ['A4', 1, 'G2'], ['G4', 1], ['D5', 1], ['C5', 2, 'C3'],
-  ['G4', .75], ['G4', .25], ['G5', 1, 'C3'], ['E5', 1], ['C5', 1], ['B4', 1, 'F2'], ['A4', 2],
-  ['F5', .75], ['F5', .25], ['E5', 1, 'C3'], ['C5', 1], ['D5', 1, 'G2'], ['C5', 3, 'C3'],
-];
-const BEAT = .52;
-function bell(freq, t, vol, decay) {
-  const g = actx.createGain();
-  g.gain.setValueAtTime(0, t);
-  g.gain.linearRampToValueAtTime(vol, t + .01);
-  g.gain.exponentialRampToValueAtTime(.0005, t + decay);
-  g.connect(master);
-  [[1, 1], [2, .25], [3, .08]].forEach(([mul, v]) => {
-    const o = actx.createOscillator(), og = actx.createGain();
-    o.type = 'sine'; o.frequency.value = freq * mul; og.gain.value = v;
-    o.connect(og).connect(g);
-    o.start(t); o.stop(t + decay + .05);
-  });
+// Background song: "Zamaana Lage" (song.m4a, already cut to start from 55 sec)
+// Pehle tap pe hi shuru ho jaata hai (browser bina tap ke awaaz nahi chalne deta)
+const SONG_VOL = .2, SONG_VOL_PARTY = .35; // 20% shuru mein, party mein 35%
+const song = new Audio('song.m4a');
+song.loop = true;
+song.preload = 'auto';
+let actx, gain, musicOn = false, muted = false, songVol = SONG_VOL;
+function setVol(v) {
+  songVol = v;
+  const out = muted ? 0 : v;
+  // iPhone ignores audio.volume, so volume goes through Web Audio when possible
+  if (gain) gain.gain.setTargetAtTime(out, actx.currentTime, .4);
+  else song.volume = out;
 }
-function scheduleTune() {
-  let t = nextStart;
-  TUNE.forEach(([n, beats, bass]) => {
-    bell(NOTE[n], t, .3, 1.6);
-    bell(NOTE[n] * 2, t + .004, .04, .6); // little sparkle on top
-    if (bass) bell(NOTE[bass], t, .22, 2.4);
-    t += beats * BEAT;
-  });
-  nextStart = t + BEAT * 3;
-  setTimeout(scheduleTune, Math.max(0, (nextStart - actx.currentTime - .6) * 1000));
-}
-function startSynth() {
-  if (actx) return;
-  if (yt && yt.stopVideo) yt.stopVideo();
-  try {
-    actx = new (window.AudioContext || window.webkitAudioContext)();
-    master = actx.createGain(); master.gain.value = muted ? 0 : .55; master.connect(actx.destination);
-    nextStart = actx.currentTime + .15;
-    scheduleTune();
-  } catch (e) { /* no audio support, party continues */ }
-}
-function startMusic() {
+function startSong() {
   if (musicOn) return;
-  musicOn = true;
-  document.getElementById('musicToggle').classList.add('show');
-  if (hasMp3) {
-    song = new Audio('song.mp3');
-    song.loop = true;
-    song.currentTime = YT_START;
-    return song.play().catch(() => { song = null; startSynth(); });
+  if (!actx) {
+    try {
+      actx = new (window.AudioContext || window.webkitAudioContext)();
+      gain = actx.createGain();
+      gain.gain.value = songVol;
+      actx.createMediaElementSource(song).connect(gain).connect(actx.destination);
+    } catch (e) { actx = gain = null; song.volume = songVol; }
   }
-  if (!ytReady) return startSynth();
-  // must be called inside the tap, otherwise phones block it
-  yt.setVolume(75);
-  yt.playVideo();
-  // slow network pe YouTube ko time lagta hai, isliye 12 sec baad hi fallback
-  setTimeout(() => {
-    if (yt.getPlayerState() !== YT.PlayerState.PLAYING && yt.getCurrentTime() < YT_START + 1) startSynth();
-  }, 12000);
+  if (actx && actx.state === 'suspended') actx.resume();
+  song.play().then(() => { musicOn = true; }).catch(() => { /* try again on next tap */ });
+}
+['pointerdown', 'touchend', 'click', 'keydown'].forEach(ev => document.addEventListener(ev, startSong, true));
+
+function startMusic() {
+  startSong();
+  setVol(SONG_VOL_PARTY);
+  document.getElementById('musicToggle').classList.add('show');
 }
 document.getElementById('musicToggle').addEventListener('click', e => {
   e.stopPropagation();
   muted = !muted;
-  if (song) song.muted = muted;
-  else if (actx) master.gain.setTargetAtTime(muted ? 0 : .55, actx.currentTime, .05);
-  else if (yt) muted ? yt.mute() : yt.unMute();
+  setVol(songVol);
   e.currentTarget.classList.toggle('muted', muted);
 });
 
@@ -389,7 +337,7 @@ function showControl(text, btnText, onClick) {
 
 const flow = [
   { cap: "Arey, itna andhera kyu hai? 🙈", btn: "Light jalao 💡", run: () => stage.classList.add('lit') },
-  { cap: "Wah! Ab thoda music ho jaaye? 🎶", btn: "Music chalao 🎵", run: startMusic },
+  { cap: "Wah! Ab music thoda tez ho jaaye? 🎶", btn: "Volume badhao 🔊", run: startMusic },
   { cap: "Thodi decoration bhi banti hai 😌", btn: "Decoration karo 🎊", run: () => document.getElementById('bunting').classList.add('show') },
   { cap: "Balloons ke bina kaisi party? 🎈", btn: "Balloons udao 🎈", run: () => { floatBalloons(); floatTimer = setInterval(floatBalloons, 4500); } },
   { cap: "Ab sabse important cheez... 🤤", btn: "Cake lao 🎂", run: () => document.getElementById('cakeWrap').classList.add('show') },

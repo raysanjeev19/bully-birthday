@@ -187,7 +187,6 @@ body.party .stage { display: flex; animation: fadeIn 1s ease; }
 .eq i { transform-origin: bottom; }
 .music-toggle.muted .eq i { animation: none; transform: scaleY(.2); opacity: .5; }
 
-.yt-wrap { position: fixed; left: -9999px; top: 0; width: 200px; height: 200px; overflow: hidden; pointer-events: none; }
 
 .stage-top { position: relative; z-index: 3; }
 
