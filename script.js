@@ -352,10 +352,10 @@ function startMusic() {
   // must be called inside the tap, otherwise phones block it
   yt.setVolume(75);
   yt.playVideo();
+  // slow network pe YouTube ko time lagta hai, isliye 12 sec baad hi fallback
   setTimeout(() => {
-    const st = yt.getPlayerState();
-    if (st !== YT.PlayerState.PLAYING && st !== YT.PlayerState.BUFFERING) startSynth();
-  }, 5000);
+    if (yt.getPlayerState() !== YT.PlayerState.PLAYING && yt.getCurrentTime() < YT_START + 1) startSynth();
+  }, 12000);
 }
 document.getElementById('musicToggle').addEventListener('click', e => {
   e.stopPropagation();
