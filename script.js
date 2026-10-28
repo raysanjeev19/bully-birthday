@@ -284,7 +284,7 @@ function alignBalloons() {
 
 // Background song: "Zamaana Lage" (song.m4a, already cut to start from 55 sec)
 // Pehle tap pe hi shuru ho jaata hai (browser bina tap ke awaaz nahi chalne deta)
-const SONG_VOL = .2, SONG_VOL_PARTY = .35; // 20% shuru mein, party mein 35%
+const SONG_VOL = .12, SONG_VOL_PARTY = .22; // 12% shuru mein, party mein 22%
 const song = new Audio('song.m4a');
 song.loop = true;
 song.preload = 'auto';
