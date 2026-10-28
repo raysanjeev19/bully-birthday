@@ -59,7 +59,8 @@
 
 <!-- Party room -->
 <section class="stage" id="stage">
-  <button class="music-toggle" id="musicToggle" aria-label="Music on/off">🔊</button>
+  <button class="music-toggle" id="musicToggle" aria-label="Music on/off"><span class="eq"><i></i><i></i><i></i><i></i></span></button>
+  <div class="stars" id="stars"></div>
 
   <div class="stage-top">
     <div class="bulbs" id="bulbs"><div class="wire"></div></div>
@@ -94,6 +95,9 @@
     <button class="stage-btn" id="stageBtn"></button>
   </div>
 </section>
+
+<!-- background song (YouTube player, kept off-screen) -->
+<div class="yt-wrap" aria-hidden="true"><div id="ytPlayer"></div></div>
 
 <script src="script.js"></script>
 </body>

@@ -231,6 +231,17 @@ for (let i = 0; i < BULBS; i++) {
   bulbsEl.appendChild(w);
 }
 
+// twinkling stars in the dark room
+const starsEl = document.getElementById('stars');
+for (let i = 0; i < 55; i++) {
+  const st = document.createElement('i');
+  st.style.left = Math.random() * 100 + '%';
+  st.style.top = Math.random() * 75 + '%';
+  st.style.setProperty('--s', (1 + Math.random() * 2.2).toFixed(1) + 'px');
+  st.style.animationDelay = -Math.random() * 3 + 's';
+  starsEl.appendChild(st);
+}
+
 // "HAPPY BIRTHDAY" flags
 document.getElementById('flags').innerHTML = [...'HAPPY BIRTHDAY'].map((ch, i) =>
   ch === ' ' ? '<div class="flag gap"></div>'
@@ -271,8 +282,25 @@ function alignBalloons() {
   });
 }
 
-// Music: agar folder mein song.mp3 rakha hai toh wo bajega, warna music-box wala Happy Birthday
-let actx, master, nextStart, muted = false, song;
+// Background song: YouTube se "Zamaana Lage", 10 sec ke baad se. Na chale toh music-box wala Happy Birthday
+const YT_ID = 'm8kaNWu-BC4', YT_START = 10;
+let yt, ytReady = false, musicOn = false, muted = false;
+window.onYouTubeIframeAPIReady = () => {
+  yt = new YT.Player('ytPlayer', {
+    videoId: YT_ID, width: 200, height: 200,
+    playerVars: { start: YT_START, playsinline: 1, controls: 0, disablekb: 1, rel: 0 },
+    events: {
+      onReady: () => { ytReady = true; },
+      onStateChange: e => { if (e.data === YT.PlayerState.ENDED) { yt.seekTo(YT_START, true); yt.playVideo(); } },
+      onError: () => { ytReady = false; if (musicOn && !actx) startSynth(); },
+    },
+  });
+};
+const ytTag = document.createElement('script');
+ytTag.src = 'https://www.youtube.com/iframe_api';
+document.head.appendChild(ytTag);
+
+let actx, master, nextStart;
 const NOTE = { F2: 87.31, G2: 98, C3: 130.81, G4: 392, A4: 440, B4: 493.88, C5: 523.25, D5: 587.33, E5: 659.25, F5: 698.46, G5: 783.99 };
 // [melody note, beats, bass note]
 const TUNE = [
@@ -307,26 +335,34 @@ function scheduleTune() {
   setTimeout(scheduleTune, Math.max(0, (nextStart - actx.currentTime - .6) * 1000));
 }
 function startSynth() {
+  if (actx) return;
+  if (yt && yt.stopVideo) yt.stopVideo();
   try {
     actx = new (window.AudioContext || window.webkitAudioContext)();
-    master = actx.createGain(); master.gain.value = .55; master.connect(actx.destination);
+    master = actx.createGain(); master.gain.value = muted ? 0 : .55; master.connect(actx.destination);
     nextStart = actx.currentTime + .15;
     scheduleTune();
   } catch (e) { /* no audio support, party continues */ }
 }
 function startMusic() {
-  if (song || actx) return;
+  if (musicOn) return;
+  musicOn = true;
   document.getElementById('musicToggle').classList.add('show');
-  song = new Audio('song.mp3');
-  song.loop = true; song.volume = .8;
-  song.play().catch(() => { song = null; startSynth(); });
+  if (!ytReady) return startSynth();
+  // must be called inside the tap, otherwise phones block it
+  yt.setVolume(75);
+  yt.playVideo();
+  setTimeout(() => {
+    const st = yt.getPlayerState();
+    if (st !== YT.PlayerState.PLAYING && st !== YT.PlayerState.BUFFERING) startSynth();
+  }, 5000);
 }
 document.getElementById('musicToggle').addEventListener('click', e => {
   e.stopPropagation();
   muted = !muted;
-  if (song) song.muted = muted;
   if (actx) master.gain.setTargetAtTime(muted ? 0 : .55, actx.currentTime, .05);
-  e.currentTarget.textContent = muted ? '🔇' : '🔊';
+  else if (yt) muted ? yt.mute() : yt.unMute();
+  e.currentTarget.classList.toggle('muted', muted);
 });
 
 // step-by-step party, like switching things on in a dark room
