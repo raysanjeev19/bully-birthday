@@ -41,8 +41,8 @@ steps.forEach((page, idx) => {
 });
 
 function goTo(i) {
-  const oldNo = pages[current].querySelector('.no');
-  if (oldNo) oldNo.style.display = 'none';
+  // flying No buttons live on <body>, so hide them all when the page changes
+  document.querySelectorAll('.no').forEach(n => { if (n.classList.contains('flying') || pages[current].contains(n)) n.style.display = 'none'; });
   pages[current].classList.remove('active');
   if (i >= pages.length) return enterParty();
   current = i;
@@ -68,10 +68,11 @@ steps.forEach(page => {
     showToast(funnyMsgs[msgIndex++ % funnyMsgs.length]);
     if (navigator.vibrate) navigator.vibrate(40);
     no.textContent = noLabels[Math.min(tries, noLabels.length - 1)];
-    yes.style.setProperty('--grow', Math.min(1 + tries * 0.08, 1.5));
+    yes.style.setProperty('--grow', Math.min(1 + tries * 0.06, 1.3));
 
     if (!no.classList.contains('flying')) {
       const r = no.getBoundingClientRect();
+      document.body.appendChild(no); // card has backdrop-filter, which would make "fixed" relative to the card
       no.style.left = r.left + 'px';
       no.style.top = r.top + 'px';
       no.classList.add('flying');
@@ -79,7 +80,7 @@ steps.forEach(page => {
     }
 
     const box = screenBox();
-    const pad = 14, topPad = 80; // leave room for the toast at top
+    const pad = 18, topPad = 90; // leave room for the toast at top
     const bw = no.offsetWidth, bh = no.offsetHeight;
     const minX = box.x + pad, maxX = box.x + box.w - bw - pad;
     const minY = box.y + topPad, maxY = box.y + box.h - bh - pad;
@@ -95,7 +96,8 @@ steps.forEach(page => {
     } while (tries2 < 40 && (overlapsYes || tooClose));
     no.style.left = Math.round(x) + 'px';
     no.style.top = Math.round(y) + 'px';
-    no.style.transform = `rotate(${Math.round(Math.random() * 20 - 10)}deg)`;
+    no.style.transform = `rotate(${Math.round(Math.random() * 12 - 6)}deg)`;
+    setTimeout(clampFlying, 320);
   });
 
   yes.addEventListener('click', () => goTo(pages.indexOf(page) + 1));
@@ -105,8 +107,8 @@ steps.forEach(page => {
 function clampFlying() {
   const box = screenBox();
   document.querySelectorAll('.no.flying').forEach(no => {
-    const x = Math.min(Math.max(parseFloat(no.style.left), box.x + 14), box.x + box.w - no.offsetWidth - 14);
-    const y = Math.min(Math.max(parseFloat(no.style.top), box.y + 80), box.y + box.h - no.offsetHeight - 14);
+    const x = Math.min(Math.max(parseFloat(no.style.left), box.x + 18), box.x + box.w - no.offsetWidth - 18);
+    const y = Math.min(Math.max(parseFloat(no.style.top), box.y + 90), box.y + box.h - no.offsetHeight - 18);
     no.style.left = x + 'px'; no.style.top = y + 'px';
   });
 }
@@ -117,7 +119,7 @@ if (window.visualViewport) visualViewport.addEventListener('resize', clampFlying
 const lines = [
   "Mujhe sach mein nahi pata ki <span class='hl'>hamara rishta kya hai</span>... dost, best friend, ya kuch aur 🤷",
   "Aur shayad iska koi naam hona zaroori bhi nahi. Kuch rishte naam se nahi, <span class='hl'>ehsaas se chalte hai</span>.",
-  "Tum ladti ho, bully karti ho, pareshaan karti ho... par sach bolu? Tumhare bina sab kuch adhoora lagta hai 🥹",
+  "Main tumse ladta hu, tumhe bully karta hu, pareshaan karta hu... par sach bolu? <span class='hl'>Tumhare bina sab kuch adhoora lagta hai</span> 🥹",
   "Bas itna yaad rakhna, din ho ya raat, khushi ho ya aansu, <span class='hl'>main hamesha tumhare saath rahunga</span>. Bina kuch puche, bina kuch maange 🤍",
 ];
 let typed = false;
@@ -269,49 +271,61 @@ function alignBalloons() {
   });
 }
 
-// Happy Birthday tune, played with Web Audio (no mp3 needed)
-let actx, master, nextStart, muted = false;
-const NOTE = { G4: 392, A4: 440, B4: 493.88, C5: 523.25, D5: 587.33, E5: 659.25, F5: 698.46, G5: 783.99 };
+// Music: agar folder mein song.mp3 rakha hai toh wo bajega, warna music-box wala Happy Birthday
+let actx, master, nextStart, muted = false, song;
+const NOTE = { F2: 87.31, G2: 98, C3: 130.81, G4: 392, A4: 440, B4: 493.88, C5: 523.25, D5: 587.33, E5: 659.25, F5: 698.46, G5: 783.99 };
+// [melody note, beats, bass note]
 const TUNE = [
-  ['G4', .75], ['G4', .25], ['A4', 1], ['G4', 1], ['C5', 1], ['B4', 2],
-  ['G4', .75], ['G4', .25], ['A4', 1], ['G4', 1], ['D5', 1], ['C5', 2],
-  ['G4', .75], ['G4', .25], ['G5', 1], ['E5', 1], ['C5', 1], ['B4', 1], ['A4', 2],
-  ['F5', .75], ['F5', .25], ['E5', 1], ['C5', 1], ['D5', 1], ['C5', 3],
+  ['G4', .75], ['G4', .25], ['A4', 1, 'C3'], ['G4', 1], ['C5', 1], ['B4', 2, 'G2'],
+  ['G4', .75], ['G4', .25], ['A4', 1, 'G2'], ['G4', 1], ['D5', 1], ['C5', 2, 'C3'],
+  ['G4', .75], ['G4', .25], ['G5', 1, 'C3'], ['E5', 1], ['C5', 1], ['B4', 1, 'F2'], ['A4', 2],
+  ['F5', .75], ['F5', .25], ['E5', 1, 'C3'], ['C5', 1], ['D5', 1, 'G2'], ['C5', 3, 'C3'],
 ];
-const BEAT = .42;
-function playNote(freq, t, dur) {
+const BEAT = .52;
+function bell(freq, t, vol, decay) {
   const g = actx.createGain();
   g.gain.setValueAtTime(0, t);
-  g.gain.linearRampToValueAtTime(.32, t + .02);
-  g.gain.exponentialRampToValueAtTime(.001, t + Math.max(dur, .35) * 1.4);
+  g.gain.linearRampToValueAtTime(vol, t + .01);
+  g.gain.exponentialRampToValueAtTime(.0005, t + decay);
   g.connect(master);
-  [[freq, 'sine', 1], [freq * 2, 'triangle', .12]].forEach(([f, type, vol]) => {
+  [[1, 1], [2, .25], [3, .08]].forEach(([mul, v]) => {
     const o = actx.createOscillator(), og = actx.createGain();
-    o.type = type; o.frequency.value = f; og.gain.value = vol;
+    o.type = 'sine'; o.frequency.value = freq * mul; og.gain.value = v;
     o.connect(og).connect(g);
-    o.start(t); o.stop(t + Math.max(dur, .35) * 1.5);
+    o.start(t); o.stop(t + decay + .05);
   });
 }
 function scheduleTune() {
   let t = nextStart;
-  TUNE.forEach(([n, beats]) => { playNote(NOTE[n], t, beats * BEAT); t += beats * BEAT; });
-  nextStart = t + BEAT * 2;
+  TUNE.forEach(([n, beats, bass]) => {
+    bell(NOTE[n], t, .3, 1.6);
+    bell(NOTE[n] * 2, t + .004, .04, .6); // little sparkle on top
+    if (bass) bell(NOTE[bass], t, .22, 2.4);
+    t += beats * BEAT;
+  });
+  nextStart = t + BEAT * 3;
   setTimeout(scheduleTune, Math.max(0, (nextStart - actx.currentTime - .6) * 1000));
 }
-function startMusic() {
-  if (actx) return;
+function startSynth() {
   try {
     actx = new (window.AudioContext || window.webkitAudioContext)();
-    master = actx.createGain(); master.gain.value = .6; master.connect(actx.destination);
+    master = actx.createGain(); master.gain.value = .55; master.connect(actx.destination);
     nextStart = actx.currentTime + .15;
     scheduleTune();
-    document.getElementById('musicToggle').classList.add('show');
   } catch (e) { /* no audio support, party continues */ }
+}
+function startMusic() {
+  if (song || actx) return;
+  document.getElementById('musicToggle').classList.add('show');
+  song = new Audio('song.mp3');
+  song.loop = true; song.volume = .8;
+  song.play().catch(() => { song = null; startSynth(); });
 }
 document.getElementById('musicToggle').addEventListener('click', e => {
   e.stopPropagation();
   muted = !muted;
-  master.gain.setTargetAtTime(muted ? 0 : .6, actx.currentTime, .05);
+  if (song) song.muted = muted;
+  if (actx) master.gain.setTargetAtTime(muted ? 0 : .55, actx.currentTime, .05);
   e.currentTarget.textContent = muted ? '🔇' : '🔊';
 });
 
@@ -376,18 +390,30 @@ const storyLines = [
   "kitni baatein, kitne jhagde",
   "kitni hasi, kitni bak-bak 😂",
   "aur sach bolu?",
-  "har ek pal yaad hai mujhe 🥹",
+  "har ek pal sambhaal ke rakha hai maine 🥹",
+  "kuch baatein seedhe keh nahi paata...",
+  "toh socha aaj shayari mein keh du ✍️",
+  ["Tujhe nigaahon se kab dekha hai maine,", "Tujhe toh apne khwaabon mein mehsoos kiya hai maine."],
+  ["Tu chaand ka tukda hai, ye zamaana kehta hai,", "Maine toh tujhmein apna poora aasmaan dekha hai."],
+  ["Teri soorat ko lafzon mein bayaan kaise karun,", "Tujhe sochkar hi toh har ghazal likhi hai maine."],
   "pata hai...",
+  "tumhara ek chhota sa 'kya kar rahe ho?'",
+  "mera poora din theek kar deta hai 📱",
+  "aur jis din baat nahi hoti",
+  "us din sab kuch adhoora sa lagta hai 🥲",
+  ["Tu saamne ho toh shayad kuch keh bhi na sakun,", "Tujhse mohabbat toh khaamoshi mein ki hai maine."],
   "aage ka raasta hamesha aasaan nahi hoga",
   "kabhi thakaan hogi, kabhi aansu",
   "par darna mat",
   "kyunki tum akeli nahi ho",
   "main hamesha yahin hu 🤍",
   "bina kuch puche, bina kuch maange",
+  ["Tujhe paane ki zid kabhi ki hi nahi,", "Teri khushi mein bhi apna sukoon dhoondha hai maine."],
+  "bas tum hamesha aise hi muskurati rehna",
   "tum jaisi ho na...",
   "waisi hi perfect ho 💫",
   "apni smile kabhi kam mat hone dena",
-  "kyunki wo kisi ka pura din bana deti hai 😊",
+  "kyunki wo mera pura din bana deti hai 😊",
   `aur haan ${HER_NAME}...`,
   "No button wali harkat maine sab dekhi hai 😏",
   "last mein...",
@@ -405,12 +431,19 @@ function playStory() {
 function nextLine() {
   clearTimeout(storyTimer);
   if (storyIndex >= storyLines.length) return finale();
-  const text = storyLines[storyIndex++];
+  const line = storyLines[storyIndex++];
   storyEl.innerHTML = '';
   const p = document.createElement('p');
-  p.textContent = text;
+  // array = shayari couplet, shown together in handwriting style
+  if (Array.isArray(line)) {
+    p.className = 'shayari';
+    line.forEach(l => { const s = document.createElement('span'); s.textContent = l; p.appendChild(s); });
+  } else {
+    p.textContent = line;
+  }
   storyEl.appendChild(p);
-  storyTimer = setTimeout(nextLine, 1800 + text.length * 45);
+  const text = [].concat(line).join(' ');
+  storyTimer = setTimeout(nextLine, (Array.isArray(line) ? 3500 : 1800) + text.length * 45);
 }
 stage.addEventListener('click', e => {
   if (storyOn && !e.target.closest('button')) nextLine();
